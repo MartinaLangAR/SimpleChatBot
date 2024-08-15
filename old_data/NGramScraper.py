@@ -8,7 +8,8 @@ import urllib
 
 class NGramScraper:
     """Scrapes Google Ngram Viewer to get amount of occuring ngrams in
-    a certain period of time, corpus 26 is english"""
+    a certain period of time, corpus 26 is english
+    """
     def __init__(self, start_year: int = 2000, end_year: int = 2015, corpus: int = 26, smoothing: int = 0):
         self.base_url = 'https://books.google.com/ngrams/json?content='
         self.start_year = str(start_year)
@@ -38,10 +39,8 @@ class NGramScraper:
             for num in range(len(result_json)): 
                 
                 # getting the name 
-                return_data.append((result_json[num]['ngram'],  
-                                    
-                                    # getting ngram data 
-                                    result_json[num]['timeseries'])  
+                return_data.append(  # getting ngram data 
+                                    result_json[num]['timeseries']
                                 ) 
     
         return return_data 
