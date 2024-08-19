@@ -1,5 +1,8 @@
 ##Insprired by https://www.geeksforgeeks.org/scrape-google-ngram-viewer-using-python/
-
+"""
+Sadly this did not work due to request issues. The amount of requests is limited and therefore not enough
+for a simple approach as this one :(
+"""
 import urllib.parse
 import requests
 import urllib
