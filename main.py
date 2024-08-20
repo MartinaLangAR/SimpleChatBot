@@ -6,11 +6,16 @@ import pickle
 if __name__ == "__main__":
 
     dataset = Dataset(3)
-    dataset.read_newfile("textresources/Sampletext.txt")
+    #dataset.read_newfile("textresources/Forster.txt")
+    #dataset.read_newfile("textresources/Sampletext2.txt")
+    #dataset.read_newfile("textresources/Sampletext.txt")
+    dataset.load_fromfile("textresources/Forster_3grams.pickle")
+    #dataset.write_tofile()
+    dataset.print_ngrams()
     bot = ChatBot(dataset)
-    dataset.write_tofile()
-    #bot.train("textresources/Sampletext.txt")
-    #print(bot.answer_prompt("what is a"))
-    #print(dataset.own_ngrams.keys())
+
+    
+    print(bot.answer_prompt("How?"))
+
 
 
