@@ -30,18 +30,20 @@
  */ 
 
 
-/* TextDemo.java requires no other files. */
+/* Based on TextDemo.java by Oracle. */
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class TextDemo extends JPanel implements ActionListener {
+
+public class ChatGUI extends JPanel implements ActionListener {
     protected JTextField textField;
     protected JTextArea textArea;
+    static Client con = new Client();
     private final static String newline = "\n";
 
-    public TextDemo() {
+    public ChatGUI() {
         super(new GridBagLayout());
 
         textField = new JTextField(20);
@@ -67,7 +69,9 @@ public class TextDemo extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent evt) {
         String text = textField.getText();
         textArea.append(text + newline); //-------------------important line!
-        
+        con.send_msg(text);
+        String answer = con.reicv_msg();
+        textArea.append(answer + newline);
         textField.selectAll();
 
         //Make sure the new text is visible, even if there
@@ -75,31 +79,35 @@ public class TextDemo extends JPanel implements ActionListener {
         textArea.setCaretPosition(textArea.getDocument().getLength());
     }
 
-    /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event dispatch thread.
-     */
     private static void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("TextDemo");
+        JFrame frame = new JFrame("ChatBotS");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        
         //Add contents to the window.
-        frame.add(new TextDemo());
+        frame.add(new ChatGUI());
 
         //Display the window.
         frame.pack();
         frame.setVisible(true);
+
+        frame.addWindowListener(new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent e) {
+            super.windowClosing(e); 
+            con.close_con();
+            }
+        
+        });
     }
 
-    public static void main(String[] args) {
-        //Schedule a job for the event dispatch thread:
-        //creating and showing this application's GUI.
+    public static void main(String[] args) throws Exception {
+        con.est_con();
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI();
             }
-        });
+           });
+        
     }
 }
