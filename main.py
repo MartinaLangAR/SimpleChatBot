@@ -1,7 +1,5 @@
 from ChatBot import ChatBot
 from Dataset import Dataset
-from nltk.tokenize import word_tokenize
-import pickle
 
 if __name__ == "__main__":
 
