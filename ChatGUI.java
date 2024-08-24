@@ -46,10 +46,10 @@ public class ChatGUI extends JPanel implements ActionListener {
     public ChatGUI() {
         super(new GridBagLayout());
 
-        textField = new JTextField(20);
+        textField = new JTextField(30);
         textField.addActionListener(this);
 
-        textArea = new JTextArea(20, 20);
+        textArea = new JTextArea(23, 20);
         textArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(textArea);
 
@@ -94,8 +94,8 @@ public class ChatGUI extends JPanel implements ActionListener {
         frame.addWindowListener(new WindowAdapter() {
         @Override
         public void windowClosing(WindowEvent e) {
-            super.windowClosing(e); 
             con.close_con();
+            super.windowClosing(e); 
             }
         
         });

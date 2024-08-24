@@ -1,36 +1,29 @@
 import socket
-from ChatBot import ChatBot
-from Dataset import Dataset
 
 
-#setup server connection to client
-soc = socket.socket()
-host = "localhost"
-port = 2004
-soc.bind((host, port))
-soc.listen(5)
+class Server:
+    def __init__(self, host, port):
+        self.socket = socket.socket()
+        self.socket.bind((host, port))
+        self.socket.listen(5)
+        self.conn = None
+        self.addr = None
 
-#setup ChatBot and Dataset
-dset = Dataset(n=3)
-dset.load_fromfile("textresources/Forster_3grams.pickle")
-chat = ChatBot(dataset=dset)
-
-
-while True:
-    conn, addr = soc.accept()
-    print("Got connection from",addr)
-    length_of_message = int.from_bytes(conn.recv(2), byteorder='big')
-    msg = conn.recv(length_of_message).decode("UTF-8")
-    print(f"Server received {msg}")
-    answer = chat.answer_prompt(msg)
+    def establish_connection(self):
+        self.conn, self.addr = self.socket.accept()
+        print("Got a connection from", self.addr)
+        return self.conn, self.addr
     
+    def receive_msg(self):
+        length_of_message = int.from_bytes(self.conn.recv(2), byteorder='big')
+        msg = self.conn.recv(length_of_message).decode("UTF-8")
+        return msg
+    
+    def send_msg(self, msg):
+        msg_to_sent = msg.encode("UTF-8")
+        self.conn.send(len(msg_to_sent).to_bytes(2, byteorder='big'))
+        self.conn.send(msg_to_sent)
 
-    # If we got a new prompt
-    if  msg:
-        message_to_send = answer.encode("UTF-8")
-        conn.send(len(message_to_send).to_bytes(2, byteorder='big'))
-        conn.send(message_to_send)
-    else:
-        print("no new prompt to answer")
-
+    def close_connection(self):
+        pass
 
