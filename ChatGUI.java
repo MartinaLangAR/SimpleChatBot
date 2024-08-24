@@ -6,31 +6,37 @@ import javax.swing.*;
 import javax.swing.text.*;
 
 
-public class ChatGUI extends JFrame implements ActionListener {
+public class ChatGUI extends JPanel implements ActionListener {
     protected JTextField textField;
-
-    protected JTextPane postPane;
-    protected JTextPane answerPane;
+    //protected JTextArea textArea;
+    protected JList<JTextpane> answersList;
+    protected JList<JTextpane> promptList;
+    //protected JTextPane postPane;
+    //protected JTextPane answerPane;
     static Client con = new Client();
     private final static String newline = "\n";
 
-    private JTextArea chatArea;
-    private JLabel jLabel1;
-    private JLabel jLabel2;
-    protected JPanel jPanel1;
-    private JScrollPane jScrollPane1;
-    private JTextField jTextField1;
-    private JLabel status;
+    private javax.swing.JTextArea chatArea;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel status;
 
-    public void ChatGUI() {
+    private void ChatGUI() {}
+        jPanel1 = new javax.swing.JPanel();
+        jTextField1 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        chatArea = new javax.swing.JTextArea();
+        jLabel2 = new javax.swing.JLabel();
+        status = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
-        jPanel1 = new JPanel();
-        jTextField1 = new JTextField(50);
-        jScrollPane1 = new JScrollPane();
-        chatArea = new JTextArea();
-        jLabel2 = new JLabel();
-        status = new JLabel();
-        jLabel1 = new JLabel();
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(0, 0, 51));
         jPanel1.setForeground(new java.awt.Color(204, 204, 204));
@@ -39,11 +45,22 @@ public class ChatGUI extends JFrame implements ActionListener {
         jTextField1.setToolTipText("text\tType your message here...");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                actionPerformed(evt);
+                jTextField1ActionPerformed(evt);
             }
         });
         jPanel1.add(jTextField1);
         jTextField1.setBounds(10, 370, 410, 40);
+
+        jButton1.setBackground(new java.awt.Color(204, 204, 255));
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton1.setText("Send");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1);
+        jButton1.setBounds(420, 370, 80, 40);
 
         chatArea.setColumns(20);
         chatArea.setRows(5);
@@ -78,25 +95,109 @@ public class ChatGUI extends JFrame implements ActionListener {
 
         setSize(new java.awt.Dimension(508, 441));
         setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
 
-        jTextField1.setEditable(true);
-        chatArea.setEditable(false);
-    }
+    /*public ChatGUI() {
+        super(new GridBagLayout());
 
-    public String post_msg(String text){
-        //add prompt to chat area
-        chatArea.append(text + newline);
-        jTextField1.setText("");
-        return text;
-    }
+        textField = new JTextField(50);
+        textField.addActionListener(this);
+
+        //textArea = new JTextArea(23, 20);
+        //textArea.setEditable(false);
+
+        JScrollPane scrollPane = new JScrollPane(textField);
+
+        //Add Components to this panel.
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridwidth = GridBagConstraints.REMAINDER;
+
+        c.fill = GridBagConstraints.HORIZONTAL;
+        add(postPane, c);
+        add(answerPane, c);
+
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 1.0;
+        c.weighty = 1.0;
+        add(textField, c);
+    }*/
 
     public void actionPerformed(ActionEvent evt) {
-        String text = jTextField1.getText();
-        post_msg(text);
-        //request answer
+        String text = textField.getText();
+        textField.setText("");
+        JTextPane postPane = new JTextPane();
+        JTextPane answerPane = new JTextPane();
+
+        answerPane.setEditable(false);
+        postPane.setEditable(false);
+
+        SimpleAttributeSet left_style = new SimpleAttributeSet();
+        SimpleAttributeSet right_style = new SimpleAttributeSet();
+
+        StyleConstants.setAlignment(left_style, StyleConstants.ALIGN_LEFT);
+        StyleConstants.setAlignment(right_style, StyleConstants.ALIGN_RIGHT);
+
+        postPane.setParagraphAttributes(right_style, true);
+        answerPane.setParagraphAttributes(left_style, true);
+
+
+        try {
+            postPane.getStyledDocument().insertString(
+                postPane.getDocument().getLength(), newline + text + newline, null
+                );
+            }
+        catch(BadLocationException e) {
+            System.out.println("Text konnte nicht zum Verlauf hinzugefügt werden");
+        }
+
+        //postPane.setText(text + newline); //-------------------important line!
         con.send_msg(text);
         String answer = con.reicv_msg();
-        chatArea.append(answer + newline);
+        //textArea.append(answer + newline);
+        try {
+            answerPane.getStyledDocument().insertString(
+                answerPane.getDocument().getLength(), newline + answer + newline, null
+                );
+            }
+        catch(BadLocationException e) {
+            System.out.println("Text konnte nicht zum Verlauf hinzugefügt werden");
+        }
+;       textField.selectAll();
+
+        //Make sure the new text is visible, even if there
+        //was a selection in the text area.
+        answerPane.setCaretPosition(answerPane.getDocument().getLength());
     }
 
+    private static void createAndShowGUI() {
+        //Create and set up the window.
+        JFrame frame = new JFrame("ChatBotS");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        //Add contents to the window.
+        frame.add(new ChatGUI());
+
+        //Display the window.
+        frame.pack();
+        frame.setVisible(true);
+
+        frame.addWindowListener(new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent e) {
+            con.close_con();
+            super.windowClosing(e); 
+            }
+        
+        });
+    }
+
+    public static void main(String[] args) throws Exception {
+        con.est_con();
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+           });
+        
+    }
 }
