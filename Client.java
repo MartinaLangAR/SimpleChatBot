@@ -3,7 +3,6 @@ import java.net.*;
 import java.net.InetSocketAddress;
 import java.lang.*;
 
-
 public class Client {
     static Socket socket = new Socket();
     static DataOutputStream dout;  //= new DataOutputStream(socket.getOutputStream()); 
