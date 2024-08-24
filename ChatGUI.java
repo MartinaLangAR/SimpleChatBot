@@ -35,48 +35,79 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.text.*;
 
 
 public class ChatGUI extends JPanel implements ActionListener {
     protected JTextField textField;
-    protected JTextArea textArea;
+    //protected JTextArea textArea;
+    protected JTextPane promptPane;
+    protected JTextPane answerPane;
     static Client con = new Client();
     private final static String newline = "\n";
 
     public ChatGUI() {
         super(new GridBagLayout());
 
-        textField = new JTextField(30);
+        textField = new JTextField(50);
         textField.addActionListener(this);
 
-        textArea = new JTextArea(23, 20);
-        textArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(textArea);
-
+        promptPane = new JTextPane();
+        answerPane = new JTextPane();
+        promptPane.setEditable(false);
+        answerPane.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(answerPane);
         //Add Components to this panel.
         GridBagConstraints c = new GridBagConstraints();
         c.gridwidth = GridBagConstraints.REMAINDER;
 
         c.fill = GridBagConstraints.HORIZONTAL;
         add(scrollPane, c);
+        add(promptPane, c);
+        add(answerPane, c);
 
         c.fill = GridBagConstraints.BOTH;
         c.weightx = 1.0;
         c.weighty = 1.0;
         add(textField, c);
+
+        SimpleAttributeSet left_style = new SimpleAttributeSet();
+        SimpleAttributeSet right_style = new SimpleAttributeSet();
+
+        StyleConstants.setAlignment(left_style, StyleConstants.ALIGN_LEFT);
+        StyleConstants.setAlignment(right_style, StyleConstants.ALIGN_RIGHT);
+
+        promptPane.setParagraphAttributes(right_style, true);
+        answerPane.setParagraphAttributes(left_style, true);
     }
 
     public void actionPerformed(ActionEvent evt) {
         String text = textField.getText();
-        textArea.append(text + newline); //-------------------important line!
+        textField.setText("");
         con.send_msg(text);
         String answer = con.reicv_msg();
-        textArea.append(answer + newline);
-        textField.selectAll();
+        
+        try {
+            promptPane.getStyledDocument().insertString(
+                promptPane.getDocument().getLength(), newline + text + newline, null
+                );
+            }
+        catch(BadLocationException e) {
+            System.out.println("Text konnte nicht zum Verlauf hinzugefügt werden");
+        }
 
+        textField.selectAll();
+        try {
+            answerPane.getStyledDocument().insertString(
+                answerPane.getDocument().getLength(), newline + answer + newline, null
+                );
+            }
+        catch(BadLocationException e) {
+            System.out.println("Text konnte nicht zum Verlauf hinzugefügt werden");
+        }
         //Make sure the new text is visible, even if there
         //was a selection in the text area.
-        textArea.setCaretPosition(textArea.getDocument().getLength());
+        textField.setCaretPosition(textField.getDocument().getLength());
     }
 
     private static void createAndShowGUI() {
