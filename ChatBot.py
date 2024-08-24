@@ -60,24 +60,26 @@ class ChatBot:
              print ("Please call the train function with a text sample first")
              return None
          prompt_words = word_tokenize(prompt)
-         if (prompt_words[0].lower() in ["what", "where", "who"]):
+         """if (prompt_words[0].lower() in ["what", "where", "who"]):
              if (prompt_words[-1] == "?"): prompt_words[-1] = "!"
              ##TODO: make sure prompt is not exceeded
              answer = [self.prepend( prompt_words[1:self.n])] + prompt_words[1:] #####!!!!!!!!!!!!!!!!!!!!!
+        
          else:
-            answer = "You want to know ".split(" ") + prompt_words
-            start_index = len(answer) - (self.n -1)
-            while (answer[-1] != "END" and start_index != 0):
-                to_append = self.append(answer[start_index : min(start_index + self.n - 1, len(answer)) ])
-                if ( to_append == ""):
-                    start_index -=1
-                    answer = answer[:-1]
-                else:
-                    answer.append(to_append)
-                    start_index += 1
-                if (len(answer) > 150):
-                    answer.append( " and so on...")
-                    break
+         """
+         answer = "You want to know ".split(" ") + prompt_words
+         start_index = len(answer) - (self.n -1)
+         while (answer[-1] != "END" and start_index != 0):
+            to_append = self.append(answer[start_index : min(start_index + self.n - 1, len(answer)) ])
+            if ( to_append == ""):
+                start_index -=1
+                answer = answer[:-1]
+            else:
+                answer.append(to_append)
+                start_index += 1
+            if (len(answer) > 150):
+                answer.append( " and so on...")
+                break
 
          #print(answer)
          return " ".join(answer)

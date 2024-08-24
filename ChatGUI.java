@@ -59,16 +59,20 @@ public class ChatGUI extends JPanel implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(answerPane);
         //Add Components to this panel.
         GridBagConstraints c = new GridBagConstraints();
-        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.gridwidth = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        add(answerPane,c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 0;
+        add(promptPane, c);
 
         c.fill = GridBagConstraints.HORIZONTAL;
-        add(scrollPane, c);
-        add(promptPane, c);
-        add(answerPane, c);
-
-        c.fill = GridBagConstraints.BOTH;
-        c.weightx = 1.0;
-        c.weighty = 1.0;
+        c.gridx = 0;
+        c.gridy = 2;
+        c.gridwidth = 2;
+        c.anchor = GridBagConstraints.PAGE_END; //bottom of space
         add(textField, c);
 
         SimpleAttributeSet left_style = new SimpleAttributeSet();
@@ -89,7 +93,7 @@ public class ChatGUI extends JPanel implements ActionListener {
         
         try {
             promptPane.getStyledDocument().insertString(
-                promptPane.getDocument().getLength(), newline + text + newline, null
+                promptPane.getDocument().getLength(),newline + text + newline, null
                 );
             }
         catch(BadLocationException e) {
