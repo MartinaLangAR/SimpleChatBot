@@ -13,7 +13,6 @@ if __name__ == "__main__":
 
     while True:
         answer = bot.answer_prompt(serv.receive_msg())
-        #TODO: handle empty input!
         serv.send_msg(answer)
 
 
