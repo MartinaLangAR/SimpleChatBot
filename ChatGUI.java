@@ -69,18 +69,13 @@ public class ChatGUI extends JPanel implements ActionListener {
         promptPane.setParagraphAttributes(right_style, true);
         answerPane.setParagraphAttributes(left_style, true);
 
-        promptPane.setSize(200,40);
-        promptPane.setSize(200, promptPane.getPreferredSize().height);
-        answerPane.setSize(200,40);
-        answerPane.setSize(200, answerPane.getPreferredSize().height);
-
         setVisible(true);
 
-                //Add Components to this panel.
-        //add(scrollPaneanswers);
-        //add(scrollPaneprompts);
-        add(answerPane);
-        add(promptPane);
+        //Add Components to this panel.
+        add(scrollPaneanswers);
+        add(scrollPaneprompts);
+        //add(answerPane);
+        //add(promptPane);
         
         add(textField);
 
