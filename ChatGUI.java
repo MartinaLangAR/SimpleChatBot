@@ -47,8 +47,7 @@ public class ChatGUI extends JPanel implements ActionListener {
     private final static String newline = "\n";
 
     public ChatGUI() {
-        super(new GridBagLayout());
-
+        setLayout( new GridLayout(2,2));
         textField = new JTextField(50);
         textField.addActionListener(this);
 
@@ -56,24 +55,10 @@ public class ChatGUI extends JPanel implements ActionListener {
         answerPane = new JTextPane();
         promptPane.setEditable(false);
         answerPane.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(answerPane);
-        //Add Components to this panel.
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridwidth = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 0;
-        add(answerPane,c);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 1;
-        c.gridy = 0;
-        add(promptPane, c);
 
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 2;
-        c.gridwidth = 2;
-        c.anchor = GridBagConstraints.PAGE_END; //bottom of space
-        add(textField, c);
+        JScrollPane scrollPaneanswers = new JScrollPane(answerPane);
+        JScrollPane scrollPaneprompts = new JScrollPane(promptPane);
+
 
         SimpleAttributeSet left_style = new SimpleAttributeSet();
         SimpleAttributeSet right_style = new SimpleAttributeSet();
@@ -83,6 +68,23 @@ public class ChatGUI extends JPanel implements ActionListener {
 
         promptPane.setParagraphAttributes(right_style, true);
         answerPane.setParagraphAttributes(left_style, true);
+
+        promptPane.setSize(200,40);
+        promptPane.setSize(200, promptPane.getPreferredSize().height);
+        answerPane.setSize(200,40);
+        answerPane.setSize(200, answerPane.getPreferredSize().height);
+
+        setVisible(true);
+
+                //Add Components to this panel.
+        //add(scrollPaneanswers);
+        //add(scrollPaneprompts);
+        add(answerPane);
+        add(promptPane);
+        
+        add(textField);
+
+
     }
 
     public void actionPerformed(ActionEvent evt) {
